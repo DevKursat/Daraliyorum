@@ -30,6 +30,10 @@ Bu sürüm, sürükleyici ve katmanlı anlatımıyla yaklaşık **30 sayfalık r
 | XIII | Birikim Defteri |
 | XIV | Yavaş Zafer |
 | XV | Nefesin Yeni Ritmi |
+| XVI | Kırk Gecelik Defter |
+| XVII | Uzun Yolun Haritası |
+| XVIII | Kapanmayan Mektup |
+| XIX | Sabit Adım Defteri |
 | — | Sonsöz: Hâlâ Buradayım |
 
 ## GitHub Pages Kurulumu
