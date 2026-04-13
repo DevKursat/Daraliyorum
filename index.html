@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daralıyorum – Attila'nın Hikâyesi</title>
+  <style>
+    /* ── Temel sıfırlama & değişkenler ───────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f13;
+      --bg-card: #16161e;
+      --accent: #7c6af7;
+      --accent-soft: #a89cf8;
+      --text: #dcd8f5;
+      --text-muted: #8880a8;
+      --border: #2a2740;
+      --chapter-num: #3d3760;
+      --font-body: 'Georgia', 'Times New Roman', serif;
+      --font-ui: 'Segoe UI', system-ui, sans-serif;
+      --max-w: 720px;
+      --line: 1.9;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      line-height: var(--line);
+      min-height: 100vh;
+    }
+
+    /* ── Sayfa kapağı ──────────────────────────────────────────────── */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 3rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 55% at 50% 40%, #1c1840 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, #12102b 0%, transparent 60%);
+      z-index: 0;
+    }
+
+    .cover > * { position: relative; z-index: 1; }
+
+    .cover-label {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+      margin-bottom: 2rem;
+      opacity: 0.8;
+    }
+
+    .cover-title {
+      font-size: clamp(3rem, 10vw, 6.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #d4ceff 0%, #7c6af7 55%, #4b3fcf 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .cover-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 3rem;
+      max-width: 420px;
+    }
+
+    .cover-author {
+      font-family: var(--font-ui);
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4rem;
+    }
+
+    .cover-cta {
+      display: inline-block;
+      padding: 0.8rem 2.2rem;
+      border: 1px solid var(--accent);
+      border-radius: 3px;
+      color: var(--accent-soft);
+      font-family: var(--font-ui);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background 0.25s, color 0.25s;
+    }
+    .cover-cta:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      animation: fadeUpDown 2.4s ease-in-out infinite;
+    }
+    .scroll-hint svg { width: 18px; height: 18px; }
+
+    @keyframes fadeUpDown {
+      0%, 100% { opacity: 0.3; transform: translateX(-50%) translateY(0); }
+      50%       { opacity: 0.6; transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── İçindekiler ───────────────────────────────────────────────── */
+    .toc-section {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 5rem 1.5rem 3rem;
+    }
+
+    .section-label {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .toc-title {
+      font-size: 1.8rem;
+      color: var(--text);
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .toc-list li a {
+      display: flex;
+      align-items: baseline;
+      gap: 0.8rem;
+      padding: 0.55rem 0.5rem;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 0.92rem;
+      border-radius: 3px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .toc-list li a:hover {
+      color: var(--text);
+      background: rgba(124, 106, 247, 0.08);
+    }
+    .toc-num {
+      font-size: 0.72rem;
+      color: var(--chapter-num);
+      min-width: 1.8rem;
+      text-align: right;
+    }
+    .toc-dots {
+      flex: 1;
+      border-bottom: 1px dotted var(--border);
+      margin: 0 0.3rem 4px;
+    }
+
+    /* ── Bölüm içeriği ─────────────────────────────────────────────── */
+    .book-content {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 1.5rem 8rem;
+    }
+
+    .chapter {
+      padding-top: 6rem;
+    }
+
+    .chapter-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .chapter-number {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.6rem;
+    }
+
+    .chapter-title {
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.25;
+    }
+
+    .chapter-divider {
+      width: 3rem;
+      height: 2px;
+      background: linear-gradient(to right, var(--accent), transparent);
+      margin-top: 1.2rem;
+    }
+
+    .chapter p {
+      margin-bottom: 1.4em;
+      text-align: justify;
+      hyphens: auto;
+    }
+
+    .chapter p:first-of-type::first-letter {
+      float: left;
+      font-size: 3.8rem;
+      line-height: 0.75;
+      padding: 0.1em 0.15em 0 0;
+      color: var(--accent-soft);
+      font-weight: 700;
+    }
+
+    .chapter blockquote {
+      border-left: 2px solid var(--accent);
+      margin: 2rem 0;
+      padding: 0.8rem 1.5rem;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .chapter blockquote p:first-of-type::first-letter {
+      float: none;
+      font-size: inherit;
+      line-height: inherit;
+      padding: 0;
+      color: inherit;
+      font-weight: inherit;
+    }
+
+    .separator {
+      text-align: center;
+      color: var(--chapter-num);
+      margin: 2.5rem 0;
+      letter-spacing: 0.5em;
+    }
+
+    /* ── Sonsöz & navigasyon ───────────────────────────────────────── */
+    .epilogue-header {
+      border-top: 1px solid var(--border);
+      padding-top: 6rem;
+      margin-top: 4rem;
+    }
+
+    .back-to-top {
+      display: flex;
+      justify-content: center;
+      padding: 3rem 0 5rem;
+    }
+    .back-to-top a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .back-to-top a:hover { color: var(--accent-soft); }
+
+    /* ── Footer ────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem 1rem;
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Duyarlı tasarım ───────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      body { font-size: 1rem; }
+      .chapter p:first-of-type::first-letter {
+        font-size: 2.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ╔══════════════ KAPAK ══════════════╗ -->
+  <section class="cover" id="kapak">
+    <span class="cover-label">Mini Roman</span>
+    <h1 class="cover-title">Daralıyorum</h1>
+    <p class="cover-subtitle">Nefes almayı unutmuş bir insanın sessiz çığlığı</p>
+    <p class="cover-author">Attila'nın Hikâyesi</p>
+    <a class="cover-cta" href="#icerik">Okumaya Başla</a>
+
+    <div class="scroll-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+      Aşağı kaydır
+    </div>
+  </section>
+
+  <!-- ╔══════════════ İÇİNDEKİLER ══════════════╗ -->
+  <section class="toc-section" id="icerik">
+    <p class="section-label">İçindekiler</p>
+    <h2 class="toc-title">Bölümler</h2>
+    <ul class="toc-list">
+      <li>
+        <a href="#bolum-1">
+          <span class="toc-num">I</span>
+          Nefes
+          <span class="toc-dots"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#bolum-2">
+          <span class="toc-num">II</span>
+          Dokuz Yaşında
+          <span class="toc-dots"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#bolum-3">
+          <span class="toc-num">III</span>
+          Karınca Gibi
+          <span class="toc-dots"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#bolum-4">
+          <span class="toc-num">IV</span>
+          Yükselmek ve Yıkılmak
+          <span class="toc-dots"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#bolum-5">
+          <span class="toc-num">V</span>
+          Gürültünün İçinde
+          <span class="toc-dots"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#bolum-6">
+          <span class="toc-num">VI</span>
+          Bir Ev, Bir Araba
+          <span class="toc-dots"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#bolum-7">
+          <span class="toc-num">VII</span>
+          Daralıyorum
+          <span class="toc-dots"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#sonsoz">
+          <span class="toc-num">—</span>
+          Sonsöz
+          <span class="toc-dots"></span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ╔══════════════ KİTAP METNİ ══════════════╗ -->
+  <main class="book-content">
+
+    <!-- ─── BÖLÜM I ─── -->
+    <article class="chapter" id="bolum-1">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm I</span>
+        <h2 class="chapter-title">Nefes</h2>
+        <div class="chapter-divider"></div>
+      </header>
+
+      <p>
+        Attila pencereye baktı. Camın ötesinde şehir vardı, her zamanki gibi koşuşturan, uğultuyla büyüyen, kendine özgü akışında devam eden şehir. Ama o baktı ve hiçbir şey görmedi. Sadece bulanık bir gri vardı, tıpkı göğsünün içindeki gri gibi.
+      </p>
+
+      <p>
+        Nefes almak bazen farkında bile olmadan yapılan bir şeydir. Uyurken nefes alırsın, yürürken nefes alırsın; beyin bu işi zaten halleder. Ama bir gün gelir, bir sabah, akşam ya da tam öğle vakti, nefes aldığını fark edersin ve o anda anlarsın ki bunu yıllardır gerçekten yapmamışsın. Akciğerlerini değil, sadece bir alışkanlığı tekrar ediyormuşsun.
+      </p>
+
+      <p>
+        Attila için o an o geceydi.
+      </p>
+
+      <p>
+        Masasının üzerinde yarım kalmış bir proje dosyası vardı. Ekranın soluk ışığı yüzünü aydınlatıyordu; ama içini değil. Klavyeye parmaklarını koydu, sonra çekti. Yeniden koydu. Yazmadı. Sadece durdu.
+      </p>
+
+      <blockquote>
+        <p>Nefes almayı öğrenmek istiyorum. Gerçekten, derinden, korkusuzca.</p>
+      </blockquote>
+
+      <p>
+        Bu düşünce zihninden geçtiğinde eğer kelimeler olsaydı, bir çocuğun fısıltısı gibi duyulurdu. Kırılgan, titrek ve çok uzun süredir içinde sıkışmış.
+      </p>
+    </article>
+
+    <!-- ─── BÖLÜM II ─── -->
+    <article class="chapter" id="bolum-2">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm II</span>
+        <h2 class="chapter-title">Dokuz Yaşında</h2>
+        <div class="chapter-divider"></div>
+      </header>
+
+      <p>
+        Attila dokuz yaşındayken diğer çocuklar futbol oynuyordu. O da oynuyordu aslında; ama bir farkla: Sahayla ev arasında koşturan çocukların ayakları toprağa basarken, onun gözleri zaten bambaşka bir yere bakıyordu.
+      </p>
+
+      <p>
+        O yaz, mahalle bakkalının oğlunun bilgisayarına ilk kez dokundu. Ekran açıldı, bir şeyler belirdi ve Attila'nın dünyası sessizce değişti. Herkes onu bir çocuk olarak görüyordu; ama o artık bir şeylerin nasıl çalıştığını anlamak isteyen biri olmuştu.
+      </p>
+
+      <p>
+        İlk satırı yazdığında elleri titredi. Bir hata mesajı geldi. Düzeltti. Yeniden denedi. Düzeltti. Yeniden denedi. Sonunda çalıştı ve Attila'nın yüzünde o an bir gülümseme belirdi — saf, beklentisiz, gerçek.
+      </p>
+
+      <div class="separator">✦ ✦ ✦</div>
+
+      <p>
+        Zamanla bu tutku sessiz sedasız bir sorumluluğa dönüştü. Attila kendi kendine öğrendi. Kitaplar, forumlar, deneme yanılma. Hata mesajlarıyla savaştı, geceler boyunca ekrana baktı ve sabah olduğunda hâlâ masasındaydı; ama bunun nedeni eğlence değildi artık. Bir gün üniversite parasını kendisi kazanacaktı. Ailesinden bir şey almak istemiyordu.
+      </p>
+
+      <p>
+        Bu fikir, dokuz yaşındaki bir çocuğun kafasında olması gereken bir fikir değildi. Ama o, dokuz yaşındayken zaten çocuk olmaya vakit ayıramıyordu.
+      </p>
+
+      <blockquote>
+        <p>Yük olmak istemiyorum. Hiç. Kimseye. Asla.</p>
+      </blockquote>
+
+      <p>
+        Bu cümle yıllar içinde Attila'nın zihnine kazındı. Bir müzik gibi, duymak istemediğinde bile çalmaya devam eden; ama susturmayı da bir türlü beceremediğin bir müzik.
+      </p>
+    </article>
+
+    <!-- ─── BÖLÜM III ─── -->
+    <article class="chapter" id="bolum-3">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm III</span>
+        <h2 class="chapter-title">Karınca Gibi</h2>
+        <div class="chapter-divider"></div>
+      </header>
+
+      <p>
+        Attila çalıştı. Bu kadar basit. Bu kadar ezici.
+      </p>
+
+      <p>
+        Mobil uygulamalar yazdı; küçük ama işlevsel, mütevazı ama özenli. Web siteleri kurdu, satır satır, pikseli pikseline. Her projeye kendisinden bir parça koydu — uyku saatlerini, huzurunu, hafta sonlarını. Hesabını hiç yapmadı; zaten yapacak zamanı yoktu.
+      </p>
+
+      <p>
+        Bir karınca düşündüğünde aklına gelen ilk şey nedir? Küçüklüğü mü, güçsüzlüğü mü? Hayır. Bir karınca, kendi ağırlığının onlarca katını sırtlar ve yoluna devam eder. Durmaz. Şikâyet etmez. Sadece taşır.
+      </p>
+
+      <p>
+        Attila da taşıdı.
+      </p>
+
+      <div class="separator">✦ ✦ ✦</div>
+
+      <p>
+        Zamanla çevresi genişledi. Doğru insanlarla tanıştı, doğru kapılar aralandı. Bir telefon görüşmesi, bir mail zinciri, bir kahve buluşması — bunların hepsi birikmişti. Attila ağ kurarken bile bunu hesapladığının farkında değildi; sadece doğru hissettiren insanlarla vakit geçiriyordu. Güven, emek ve sabırla büyüyen bağlar kurmuştu.
+      </p>
+
+      <p>
+        Hayat güzel görünüyordu. Yorucuydu; ama güzeldi.
+      </p>
+    </article>
+
+    <!-- ─── BÖLÜM IV ─── -->
+    <article class="chapter" id="bolum-4">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm IV</span>
+        <h2 class="chapter-title">Yükselmek ve Yıkılmak</h2>
+        <div class="chapter-divider"></div>
+      </header>
+
+      <p>
+        Her şey yoluna girdiğinde Attila bir an için nefes aldı. Gerçekten, tam anlamıyla. Projeleri ilerliyordu, bağlantıları güçlüydü, ufukta beklediği şey artık çok uzakta görünmüyordu.
+      </p>
+
+      <p>
+        Sonra yıkıldı.
+      </p>
+
+      <p>
+        Bir gecede değil. Günler, haftalar boyunca yavaşça çözüldü. Bir proje battı. Bir ortaklık sona erdi. Birinin verdiği söz tutulmadı. Emek harcanan bir kapı yüzüne kapandı. Ve Attila yeniden sıfırın önünde duruyordu; ama bu sefer biraz daha yorgun, biraz daha ağır.
+      </p>
+
+      <blockquote>
+        <p>Her seferinde kalkıyorum. Ama her seferinde biraz daha zor kalkıyorum.</p>
+      </blockquote>
+
+      <p>
+        Çevresi bu döngüyü görmüyordu. Dışarıdan bakınca Attila iyi görünüyordu; hep iyi görünürdü. Güçlü olmak zorundaydı çünkü. Kırık görünmek bir lüks değildi.
+      </p>
+
+      <div class="separator">✦ ✦ ✦</div>
+
+      <p>
+        Üniversiteye gitmeyi düşündüğü zamanlar oldu. Kampüs hayatını, öğrenci kardeşliğini, derslerden sonra bahçede oturmayı hayal etti. Sonra hesap yaptı: para, zaman, aile. Bunları düşündüğünde hayal dağılıyordu. Yerine somut bir karar oturuyordu: Çalışacaksın. Kendi ayaklarının üzerinde duracaksın. Kimseye el açmayacaksın.
+      </p>
+
+      <p>
+        Doğru muydu bu karar? Bilmiyordu. Hâlâ bilmiyor.
+      </p>
+    </article>
+
+    <!-- ─── BÖLÜM V ─── -->
+    <article class="chapter" id="bolum-5">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm V</span>
+        <h2 class="chapter-title">Gürültünün İçinde</h2>
+        <div class="chapter-divider"></div>
+      </header>
+
+      <p>
+        Attila bir gün fark etti ki telefona baktığı saatler, uyuduğu saatleri geçmişti.
+      </p>
+
+      <p>
+        Sosyal medya başlangıçta bir pencereydi. Dünyaya uzanan, ilham veren, bağlayan bir pencere. Ama zamanla bir aynaya dönüştü; üstelik çarpık bir aynaya. Herkesin hayatı parlak görünüyordu. Herkesin başarısı anında, herkesin mutluluğu filtreli. Attila kendi hayatına baktı, sonra ekrana baktı, sonra yeniden kendi hayatına.
+      </p>
+
+      <p>
+        Fark çok büyüktü.
+      </p>
+
+      <blockquote>
+        <p>Ya hep geride kaldıysam? Ya yeterince çalışmadıysam? Ya diğerleri kadar yetenekli değilsem?</p>
+      </blockquote>
+
+      <p>
+        Bu sorular gece yatmadan önce gelirdi. Küçük, sivri, ısrarcı. Yıllar boyu çalışmış, üretmiş, direnmiş biri olarak Attila bu soruları hak etmiyordu. Ama beyin mantıkla değil, yorgunlukla karar alır. Ve o çok yorgundu.
+      </p>
+
+      <div class="separator">✦ ✦ ✦</div>
+
+      <p>
+        Bir süre telefonu kapatmayı denedi. İki gün dayanabildi. Sonra yeniden açtı; çünkü iş için gerekiyordu, iletişim için gerekiyordu, hayatta kalmak için gerekiyordu. Ama neye benzediğini artık biliyordu: Gürültü. Sürekli, yorucu, karşılaştırmalı bir gürültü.
+      </p>
+
+      <p>
+        Ve bu gürültünün içinde Attila'nın sesi giderek daha az duyulur oldu.
+      </p>
+    </article>
+
+    <!-- ─── BÖLÜM VI ─── -->
+    <article class="chapter" id="bolum-6">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm VI</span>
+        <h2 class="chapter-title">Bir Ev, Bir Araba</h2>
+        <div class="chapter-divider"></div>
+      </header>
+
+      <p>
+        Attila'nın hayali soyut değildi. Büyük ve parlak hayaller kurmuyordu; ada satın almak, dünyayı dolaşmak, tarihe geçmek istemiyordu. İstediği şey mütevazı, somut ve can alıcıydı.
+      </p>
+
+      <p>
+        Bir ev. Kendisine ait, sözleşme bitince taşınmak zorunda kalmadığı, kapısından girerken "bu benim" diyebildiği bir ev. Belki iki ev — biri güvenlik, biri huzur. Ve bir araba: Sabah işe giderken saatlerce beklemediği, yağmurda ıslanmadığı, programına göre değil başkasının programına göre gitmediği bir araba.
+      </p>
+
+      <blockquote>
+        <p>Çok mu fazla istiyorum? Gerçekten çok mu fazla?</p>
+      </blockquote>
+
+      <p>
+        Bu soruyu kendine sormak zorunda kalması bile yorucuydu. Yıllardır çalışan, üreten, diğerlerinin gözünde "başarılı" görünen biri olarak hâlâ bu temel güvenceden yoksun olması bir şeylerin yanlış gittiğine işaret ediyordu. Ama nerede? Kim yanlış yapmıştı?
+      </p>
+
+      <div class="separator">✦ ✦ ✦</div>
+
+      <p>
+        Cevap yoktu. Ya da cevap çok karmaşıktı: Ekonomi, şans, zamanlama, kader. Bunları düşünmek çözüm üretmiyordu; sadece daha da bitkin düşürüyordu.
+      </p>
+
+      <p>
+        Attila o gece hayatını garantiye almak istediğine karar verdi. Kağıda yazmadı, kimseye söylemedi. Sadece içinde bir şey kıpırdadı. Zayıf ama gerçek. Küçük ama ateşli.
+      </p>
+
+      <p>
+        Hâlâ istiyordu. Bu, bir şeydi.
+      </p>
+    </article>
+
+    <!-- ─── BÖLÜM VII ─── -->
+    <article class="chapter" id="bolum-7">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm VII</span>
+        <h2 class="chapter-title">Daralıyorum</h2>
+        <div class="chapter-divider"></div>
+      </header>
+
+      <p>
+        Daralıyorum.
+      </p>
+
+      <p>
+        Bu kelimeyi ilk kez sesli söylediğinde odada kimse yoktu. Ama kelime gerçekti. Havada asılı kaldı, duvarlara çarptı, geri geldi. Attila onu geri almadı.
+      </p>
+
+      <p>
+        Daralıyorum; çünkü duvarlar her taraftan geliyor. Çalıştıkça yoruluyorum, yoruldukça küçülüyorum. Yük olmaktan korkuyorum, korktukça daha fazla çalışıyorum. Bir çark bu. Dönüyor, durmadan dönüyor ve ben içindeyim.
+      </p>
+
+      <p>
+        Mutlu değilim. Bunu kabul etmek zor. Başarıyla, üretkenlikle, özgüvenle tanımlanan biri için "mutlu değilim" demek neredeyse ihanete benziyor — kime ihanet? Bilmiyorum. Belki kendine.
+      </p>
+
+      <div class="separator">✦ ✦ ✦</div>
+
+      <p>
+        Ama şunu da biliyor: Bu his geçici değil, kalıcı bir yenilgi de değil. Bir uyarı. Bedenin ve zihnin senden bir şeyler istemesi. Dur, dinlen, izin ver kendine.
+      </p>
+
+      <p>
+        Attila o gece masanın başından kalktı. Bilgisayarı kapattı — ilk kez kapattı, zorla değil, isteyerek. Balkona çıktı. Şehrin sesi vardı; ama o an şehri değil, kendi nefesini dinledi.
+      </p>
+
+      <p>
+        İndi. Çıktı. Sonra yeniden girdi.
+      </p>
+
+      <p>
+        Ama bu sefer biraz daha hafif.
+      </p>
+    </article>
+
+    <!-- ─── SONSÖZ ─── -->
+    <article class="chapter epilogue-header" id="sonsoz">
+      <header class="chapter-header">
+        <span class="chapter-number">Sonsöz</span>
+        <h2 class="chapter-title">Hâlâ Buradayım</h2>
+        <div class="chapter-divider"></div>
+      </header>
+
+      <p>
+        Bu hikâye bitmedi. Çünkü bitmesi gerekmiyor.
+      </p>
+
+      <p>
+        Attila hâlâ çalışıyor. Hâlâ hayaller kuruyor. Hâlâ o evi, o arabayı, o huzuru istiyor. Hâlâ sosyal medyanın gürültüsünde kaybolup buluyor kendini. Hâlâ yük olmaktan korkuyor. Ama şimdi bir şey daha biliyor:
+      </p>
+
+      <blockquote>
+        <p>Yük olmaktan korkmak, sevgiyi reddetmek demek değildir. Güçlü olmak, hiç kırılmamak demek değildir. Başarı, içi boş bir koşu değildir.</p>
+      </blockquote>
+
+      <p>
+        Bazen durman gerekir. Bazen pencereye bakman, sadece bakman gerekir. Bazen "daralıyorum" demen gerekir — kimseye değil, sadece kendine, sadece duyulsun diye.
+      </p>
+
+      <p>
+        Bu roman bir çözüm sunmuyor. Sadece bir ses. Çok tanıdık, çok içten, çok gerçek bir ses. Belki o sesi duyduğunda anlayacaksın: Yalnız değilsin.
+      </p>
+
+      <p>
+        Attila hâlâ burada. Sen de buradasın.
+      </p>
+
+      <p>
+        Bu yeterli.
+      </p>
+    </article>
+
+    <div class="back-to-top">
+      <a href="#kapak">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+        Başa dön
+      </a>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Daralıyorum &nbsp;·&nbsp; Attila'nın Hikâyesi &nbsp;·&nbsp; Tüm hakları saklıdır.</p>
+  </footer>
+
+</body>
+</html>
