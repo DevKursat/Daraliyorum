@@ -4,7 +4,7 @@
 
 **Daralıyorum**, Attila adında genç bir yazılımcının iç dünyasını konu alan Türkçe bir **uzun form mini roman**dır. Yük olmama kaygısı, erken yaşta çalışma hayatına atılmak, karınca gibi emek verip yeniden sıfırlanmak, sosyal medyanın gürültüsü ve en basit güvenceye — bir eve, bir arabaya — duyulan derin özlem…
 
-Bu sürüm, sürükleyici ve katmanlı anlatımıyla yaklaşık **30 sayfalık roman deneyimine** yaklaşacak şekilde genişletilmiştir.
+Bu sürüm, sürükleyici ve katmanlı anlatımıyla **8000+ kelime** hedefini karşılayacak biçimde genişletilmiştir.
 
 ## 📖 Kitabı Oku
 
@@ -34,6 +34,7 @@ Bu sürüm, sürükleyici ve katmanlı anlatımıyla yaklaşık **30 sayfalık r
 | XVII | Uzun Yolun Haritası |
 | XVIII | Kapanmayan Mektup |
 | XIX | Sabit Adım Defteri |
+| XX | Aynadaki Nesil |
 | — | Sonsöz: Hâlâ Buradayım |
 
 ## GitHub Pages Kurulumu
