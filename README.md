@@ -2,9 +2,9 @@
 
 > *Nefes almayı unutmuş bir insanın sessiz çığlığı.*
 
-**Daralıyorum**, Attila adında genç bir yazılımcının iç dünyasını konu alan Türkçe bir mini romandır. Yük olmama kaygısı, erken yaşta çalışma hayatına atılmak, karınca gibi emek verip yeniden sıfırlanmak, sosyal medyanın gürültüsü ve en basit güvenceye — bir eve, bir arabaya — duyulan derin özlem…
+**Daralıyorum**, Attila adında genç bir yazılımcının iç dünyasını konu alan Türkçe bir **uzun form mini roman**dır. Yük olmama kaygısı, erken yaşta çalışma hayatına atılmak, karınca gibi emek verip yeniden sıfırlanmak, sosyal medyanın gürültüsü ve en basit güvenceye — bir eve, bir arabaya — duyulan derin özlem…
 
-Bu hikâye büyük hayaller kurmaz. Sadece gerçek, somut ve tanıdık bir sesi aktarır.
+Bu sürüm, sürükleyici ve katmanlı anlatımıyla yaklaşık **30 sayfalık roman deneyimine** yaklaşacak şekilde genişletilmiştir.
 
 ## 📖 Kitabı Oku
 
@@ -22,6 +22,14 @@ Bu hikâye büyük hayaller kurmaz. Sadece gerçek, somut ve tanıdık bir sesi 
 | V | Gürültünün İçinde |
 | VI | Bir Ev, Bir Araba |
 | VII | Daralıyorum |
+| VIII | Küllerden Plan |
+| IX | Bütçe ve Beton |
+| X | Ekran Gürültüsü |
+| XI | Çıkmaz Sokak Toplantısı |
+| XII | Sessiz İsyan |
+| XIII | Birikim Defteri |
+| XIV | Yavaş Zafer |
+| XV | Nefesin Yeni Ritmi |
 | — | Sonsöz: Hâlâ Buradayım |
 
 ## GitHub Pages Kurulumu

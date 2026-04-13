@@ -116,6 +116,55 @@
       color: #fff;
     }
 
+    .progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(124, 106, 247, 0.2);
+      z-index: 999;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #a89cf8, #7c6af7);
+      transition: width 0.1s linear;
+    }
+
+    .reading-stats {
+      margin-top: 1.8rem;
+      width: min(560px, 100%);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .reading-stat {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.8rem;
+      background: rgba(22, 22, 30, 0.75);
+    }
+
+    .reading-stat-label {
+      display: block;
+      font-family: var(--font-ui);
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .reading-stat-value {
+      font-family: var(--font-ui);
+      color: var(--accent-soft);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
     .scroll-hint {
       position: absolute;
       bottom: 2rem;
@@ -316,6 +365,12 @@
     }
 
     /* ── Duyarlı tasarım ───────────────────────────────────────────── */
+    @media (max-width: 760px) {
+      .reading-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 600px) {
       body { font-size: 1rem; }
       .chapter p:first-of-type::first-letter {
@@ -325,14 +380,30 @@
   </style>
 </head>
 <body>
+  <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
 
   <!-- ╔══════════════ KAPAK ══════════════╗ -->
   <section class="cover" id="kapak">
-    <span class="cover-label">Mini Roman</span>
+    <span class="cover-label">Uzun Form Roman</span>
     <h1 class="cover-title">Daralıyorum</h1>
     <p class="cover-subtitle">Nefes almayı unutmuş bir insanın sessiz çığlığı</p>
-    <p class="cover-author">Attila'nın Hikâyesi</p>
+    <p class="cover-author">Attila'nın Hikâyesi · Genişletilmiş Sürüm</p>
     <a class="cover-cta" href="#icerik">Okumaya Başla</a>
+
+    <div class="reading-stats">
+      <div class="reading-stat">
+        <span class="reading-stat-label">Bölüm</span>
+        <span class="reading-stat-value" id="chapterCount">16</span>
+      </div>
+      <div class="reading-stat">
+        <span class="reading-stat-label">Kelime</span>
+        <span class="reading-stat-value" id="wordCount">—</span>
+      </div>
+      <div class="reading-stat">
+        <span class="reading-stat-label">Okuma Süresi</span>
+        <span class="reading-stat-value" id="readingTime">—</span>
+      </div>
+    </div>
 
     <div class="scroll-hint">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -347,62 +418,26 @@
     <p class="section-label">İçindekiler</p>
     <h2 class="toc-title">Bölümler</h2>
     <ul class="toc-list">
-      <li>
-        <a href="#bolum-1">
-          <span class="toc-num">I</span>
-          Nefes
-          <span class="toc-dots"></span>
-        </a>
-      </li>
-      <li>
-        <a href="#bolum-2">
-          <span class="toc-num">II</span>
-          Dokuz Yaşında
-          <span class="toc-dots"></span>
-        </a>
-      </li>
-      <li>
-        <a href="#bolum-3">
-          <span class="toc-num">III</span>
-          Karınca Gibi
-          <span class="toc-dots"></span>
-        </a>
-      </li>
-      <li>
-        <a href="#bolum-4">
-          <span class="toc-num">IV</span>
-          Yükselmek ve Yıkılmak
-          <span class="toc-dots"></span>
-        </a>
-      </li>
-      <li>
-        <a href="#bolum-5">
-          <span class="toc-num">V</span>
-          Gürültünün İçinde
-          <span class="toc-dots"></span>
-        </a>
-      </li>
-      <li>
-        <a href="#bolum-6">
-          <span class="toc-num">VI</span>
-          Bir Ev, Bir Araba
-          <span class="toc-dots"></span>
-        </a>
-      </li>
-      <li>
-        <a href="#bolum-7">
-          <span class="toc-num">VII</span>
-          Daralıyorum
-          <span class="toc-dots"></span>
-        </a>
-      </li>
-      <li>
-        <a href="#sonsoz">
-          <span class="toc-num">—</span>
-          Sonsöz
-          <span class="toc-dots"></span>
-        </a>
-      </li>
+      <li><a href="#bolum-1"><span class="toc-num">I</span>Nefes<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-2"><span class="toc-num">II</span>Dokuz Yaşında<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-3"><span class="toc-num">III</span>Karınca Gibi<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-4"><span class="toc-num">IV</span>Yükselmek ve Yıkılmak<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-5"><span class="toc-num">V</span>Gürültünün İçinde<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-6"><span class="toc-num">VI</span>Bir Ev, Bir Araba<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-7"><span class="toc-num">VII</span>Daralıyorum<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-8"><span class="toc-num">VIII</span>Küllerden Plan<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-9"><span class="toc-num">IX</span>Bütçe ve Beton<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-10"><span class="toc-num">X</span>Ekran Gürültüsü<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-11"><span class="toc-num">XI</span>Çıkmaz Sokak Toplantısı<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-12"><span class="toc-num">XII</span>Sessiz İsyan<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-13"><span class="toc-num">XIII</span>Birikim Defteri<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-14"><span class="toc-num">XIV</span>Yavaş Zafer<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-15"><span class="toc-num">XV</span>Nefesin Yeni Ritmi<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-16"><span class="toc-num">XVI</span>Kırk Gecelik Defter<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-17"><span class="toc-num">XVII</span>Uzun Yolun Haritası<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-18"><span class="toc-num">XVIII</span>Kapanmayan Mektup<span class="toc-dots"></span></a></li>
+      <li><a href="#bolum-19"><span class="toc-num">XIX</span>Sabit Adım Defteri<span class="toc-dots"></span></a></li>
+      <li><a href="#sonsoz"><span class="toc-num">—</span>Sonsöz<span class="toc-dots"></span></a></li>
     </ul>
   </section>
 
@@ -676,6 +711,246 @@
       </p>
     </article>
 
+    <!-- ─── BÖLÜM VIII ─── -->
+    <article class="chapter" id="bolum-8">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm VIII</span>
+        <h2 class="chapter-title">Küllerden Plan</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Attila sabah uyandığında masayı boşalttı. Eski projeler, kapanmış sözleşmeler, cevaplanmamış notlar ve yarım kalan fikirler aynı anda önündeydi. Yıllardır biriktirdiği her dosya ona aynı şeyi söylüyordu: Çalıştın, düştün, toparlandın, yine çalıştın. Ama bu kez yalnızca devam etmek yetmeyecekti; düzeni yeniden kurması gerekiyordu.</p>
+      <p>Yeni bir plan yaptı ve planın başlığı teknik değil insaniydi: Hayatta kal, büyü, nefes al. İlk sütuna faturalar, kritik teslimler ve düzenli gelir işleri girdi. İkinci sütuna yeni ürün, daha iyi müşteri seçimi ve daha net sözleşmeler. Üçüncü sütuna ise yıllarca ertelediği şeyleri yazdı: uyku, yürüyüş, telefonsuz bir saat, bir arkadaşla gerçek konuşma.</p>
+      <p>Gün içinde gelen üç tekliften birini reddetti. Reddederken elleri titredi; çünkü her hayır, geçmişteki korkularını tetikliyordu. Ama aynı gün kabul ettiği iki iş, daha adil bütçe ve daha gerçekçi teslim tarihiyle geldi. Attila ilk kez şunu net hissetti: sınır koymak kapı kapatmak değil, doğru kapıyı seçmekti.</p>
+      <p>Akşam defterine uzun uzun yazdı. Dokuz yaşından beri taşıdığı “yük olmama” cümlesini, üniversiteyi yazmak yerine çalışmaya yönelmesini, yıllar boyu karınca gibi emek verip tam yükselirken yıkılmasını, her döngüde biraz daha yorulmasını. Yazdıkça cümleler sertliğini kaybetti; kelimeler, içinde sıkışmış hava gibi dışarı çıktı.</p>
+      <blockquote><p>Bu kez sadece ayakta kalmak istemiyorum; ayakta kalırken yaşamak da istiyorum.</p></blockquote>
+      <p>O gece yeni bir proje deposu açtı. İsmini “Sığınak” koydu. Başkaları için bir görev yönetim aracı olacaktı, Attila içinse nefes düzenleyicisi. Ürünün ilk kuralını başa yazdı: “Hızlı değil, sürdürülebilir.” Bu cümle yıllarca kaçırdığı dengeyi tek satırda özetliyordu.</p>
+      <p>Bilgisayarı kapatmadan önce bir satır daha ekledi: “Büyürken boğulma.” Sonra ilk kez gerçekten derin bir nefes aldı.</p>
+    </article>
+
+    <!-- ─── BÖLÜM IX ─── -->
+    <article class="chapter" id="bolum-9">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm IX</span>
+        <h2 class="chapter-title">Bütçe ve Beton</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Attila'nın bir ev ve bir araba hayali hiç değişmedi. Çevresi bazen bunu küçük, bazen gereksiz, bazen de çok zor buldu. Oysa Attila için mesele prestij değildi; sabitlenmekti. Kira artışından korkmadan bir kapıyı kendi anahtarıyla açmak, gece geç saatte dönüşte güvende hissetmek, yarını düşünürken nefesinin daralmaması.</p>
+      <p>Bu kez hayali yalnızca içinden geçirmek yerine hesapladı. Bölge bölge ev fiyatları, peşinat oranları, kredi yükü, aidat etkisi, ulaşım maliyeti. Araba için de bakım, sigorta, yakıt, yıllık gider tablosu hazırladı. Rakamlar kolay değildi ama görünür olduğunda korku biraz azaldı. Belirsizlik dağınıktır; sayı düzen verir.</p>
+      <p>Bir pazar günü babasıyla mahalle gezip ilanlara baktı. Kimse büyük cümleler kurmadı. Ama birlikte yürümek, Attila'nın yıllardır içinde sakladığı yalnızlık hissini yumuşattı. “Yük olmamalıyım” fikri onu güçlü kılmıştı, evet; fakat onu gereğinden fazla tek kişilik bir hayata da sıkıştırmıştı.</p>
+      <p>Akşam bir tablo daha açtı: “Yeterince”. Bu sütuna rakam değil cümle yazdı: “Ailemden para istemeden, geceleri panik olmadan uyuyabildiğim düzen.” Hedefin gerçek adı buydu. Ev ve araba sadece sembol değil, psikolojik güvenliğin somut biçimiydi.</p>
+      <blockquote><p>Ben lüks istemiyorum; omuzlarımdaki korkuyu indirecek kadar sağlam bir zemin istiyorum.</p></blockquote>
+      <p>Attila artık hayaline bakınca “imkânsız” yerine “ölçülebilir” diyordu. Bu küçük kelime değişimi bütün ritmini etkiledi. Aynı yük vardı, ama taşıma biçimi değişmişti.</p>
+      <p>Defterin kenarına son notu düştü: “Tarih değil ritim.” Çünkü ona göre gerçek kazanım, bir gecelik sıçrama değil, her ay biraz daha sağlamlaşmaktı.</p>
+    </article>
+
+    <!-- ─── BÖLÜM X ─── -->
+    <article class="chapter" id="bolum-10">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm X</span>
+        <h2 class="chapter-title">Ekran Gürültüsü</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Attila telefon ekranını her açtığında iki dünyaya aynı anda bakıyordu. Birinde kendi gerçeği: teslim tarihleri, bütçe tabloları, yorgunluk, çaba. Diğerinde vitrindeki hayatlar: hızlı başarılar, kusursuz ofisler, “bir gecede değişen hayatlar”. Aradaki fark mantıkla kapanmıyordu; çünkü karşılaştırma mantıkla değil duyguyla çalışır.</p>
+      <p>Bir gece “beş dakika bakıp çıkacağım” diye girdi ve bir saat kayboldu. Uygulamayı kapattığında odası daha dar, geleceği daha belirsiz görünüyordu. Oysa aynı gün üç iş teslim etmişti. Ekran, emeğin ölçüsünü değil algının sesini yükseltiyordu.</p>
+      <p>Ertesi sabah dijital disiplin kurdu. Bildirimleri kapattı, uygulamaları ana ekrandan kaldırdı, telefonu gri moda aldı, sosyal medya için iki zaman penceresi belirledi. İlk hafta sürekli elini telefona götürdü. İkinci hafta dürtü azaldı. Üçüncü hafta akşamları tekrar kitap okuyabildiğini fark etti.</p>
+      <p>Yine de bazen döngüye kapılıyordu. O anlarda kendini suçlamak yerine veri topladı: Hangi ruh halinde daha çok kaydırıyordu? Hangi içerikler sonrası daralma artıyordu? Sonuç netti: belirsiz günlerde başarı vitrinleri onu en çok yoruyordu. Bu farkındalıkla akışını yeniden biçimlendirdi.</p>
+      <blockquote><p>Beni geriye iten şey çalışmamak değil; başkalarının sonucu ile kendi sürecimi kıyaslamak.</p></blockquote>
+      <p>Bir gece kısa bir paylaşım yaptı: “Parlak sonucun arkasında görünmeyen uzun bir mücadele vardır.” Beklemediği kadar mesaj aldı. Yalnız olmadığını görmek, sosyal medyanın nadir ama gerçek iyiliklerinden biriydi.</p>
+      <p>Gürültü tamamen bitmedi. Ama Attila artık gürültünün içinde kim olduğunu unutmamaya başlamıştı.</p>
+    </article>
+
+    <!-- ─── BÖLÜM XI ─── -->
+    <article class="chapter" id="bolum-11">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm XI</span>
+        <h2 class="chapter-title">Çıkmaz Sokak Toplantısı</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Kasım ayının sert bir akşamında Attila kritik bir toplantıya girdi. Potansiyel ortaklık, düzenli gelir demekti. Sunum iyi geçti, teknik taraf güçlüydü, ekip ikna olmuş görünüyordu. Son bölümde ödeme koşullarına gelince masa gerildi. Karşı taraf uzun vade ve düşük peşinat istedi.</p>
+      <p>Attila'nın içindeki eski refleks “tamam” demesini istedi. Çünkü yıllarca fırsat kaçırmaktan korkmuştu. Ama artık hesabı biliyordu: bu şartlar iki ay sonra nakit akışını bozar, uykusunu kaçırır, yeniden daralma döngüsüne sokardı. Derin bir nefes aldı ve “Bu koşullarla sürdürülebilir olmaz” dedi.</p>
+      <p>Kısa bir sessizlik oldu. Toplantı belirsiz bitti. Attila dışarı çıktığında yağmur başlamıştı. Durakta beklerken zihninde aynı soru dönüyordu: “Yine mi başa döndüm?” Eve gidip masaya oturduğunda toplantıyı tekrar düşündü. Cevap yavaştan netleşti: Bu kez başa dönmemiş, sadece kendini korumuştu.</p>
+      <p>Üç gün sonra ekip geri döndü. Şartları revize etmişlerdi: daha kısa vade, daha net kapsam, makul ön ödeme. Attila maili okurken şaşırdı. Sınır koymak kapıyı kapatmamıştı; masayı eşitlemişti.</p>
+      <blockquote><p>Bazen kaybettiğin fırsat değildir; uygun olmayan yükten kurtulursun.</p></blockquote>
+      <p>Anlaşma imzalandıktan sonra Attila'nın hayatı mucizevi biçimde düzelmedi. Ama aylık ritim oturdu, paniğin sesi azaldı, plan yapma kapasitesi arttı. Çıkmaz sokak sandığı yerin aslında yön değiştirme noktası olduğunu böylece öğrendi.</p>
+      <p>O gece günlüğüne tek cümle yazdı: “Güç, yüksek ses değil; doğru yerde netliktir.”</p>
+    </article>
+
+    <!-- ─── BÖLÜM XII ─── -->
+    <article class="chapter" id="bolum-12">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm XII</span>
+        <h2 class="chapter-title">Sessiz İsyan</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Attila'nın isyanı bağırarak olmadı. Gece üçte çalışmayı bırakmasıyla başladı. Pazar günlerini acil olmayan işlere kapatmasıyla devam etti. Her mesaja anında dönmemeyi, her işe “evet” dememeyi, her talebi kendi sorumluluğu saymamayı öğrendi. Dışarıdan bakınca küçük değişikliklerdi; içeriden bakınca hayatın iskeleti değişiyordu.</p>
+      <p>İlk günlerde suçluluk büyüktü. “Yeterince çabalamıyor muyum?” sorusu boşluk bulduğu her yerde ortaya çıkıyordu. Sonra veriye baktı: teslim kalitesi yükselmiş, hata oranı düşmüş, müşteri memnuniyeti artmıştı. Demek ki mesele daha çok saat değil, daha temiz dikkatmiş.</p>
+      <p>Sessiz isyanın bir parçası da bedenini yeniden duymaktı. Uzun oturmaktan ağrıyan sırtı için egzersiz başladı. Yemekleri masada değil mutfakta yedi. Gün içinde kısa yürüyüşler koydu. Bunlar küçük eylemlerdi ama sinir sistemine “tehlike bitmedi ama kontrol sende” mesajı veriyordu.</p>
+      <p>Bir akşam eski klasörlerinde çocukluk defterinin taranmış bir sayfasını buldu. Köşede çocuk yazısıyla “Büyüyünce güçlü olacağım” yazıyordu. Attila uzun süre bu cümleye baktı. Gücü yanlış anlamıştı: Güç hiç yorulmamak değil, yorulduğunda kendine izin verebilmekti.</p>
+      <blockquote><p>Kendime karşı nazik olmak tembellik değil; uzun yol için strateji.</p></blockquote>
+      <p>Yakın çevresi bu değişimi fark etti. Attila artık daha az acele eden, daha net konuşan, daha gerçek cümleler kuran birine dönüşüyordu. “İyiyim” yerine “zor ama toparlıyorum” diyebiliyordu. Bu dürüstlük onu zayıflatmadı; ilişkilerini güçlendirdi.</p>
+      <p>Sessiz isyanın sonunda Attila şunu gördü: Yıllardır kendi hayatında sadece çalışan rolündeydi. Şimdi yavaş yavaş yönetici koltuğuna oturuyordu.</p>
+    </article>
+
+    <!-- ─── BÖLÜM XIII ─── -->
+    <article class="chapter" id="bolum-13">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm XIII</span>
+        <h2 class="chapter-title">Birikim Defteri</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Attila birikim kelimesini yıllarca sadece para olarak düşündü. Sonra bir gece defter açıp yeni başlıklar yazdı: birikmiş beceri, birikmiş güven, birikmiş ilişki, birikmiş sabır. Rakamların dışında kalan bu varlıklar, kriz anında en çok işe yarayanlardı.</p>
+      <p>Defterin sol tarafına “Eksikler”, sağ tarafına “Kazandıklarım” yazdı. Sol tarafta ev, araba, daha geniş güvence vardı. Sağ tarafta erken yaşta edinilmiş disiplin, çok yönlü üretim, krizlerden kalkma becerisi, sağlam bağlantılar, sözleşme bilgisi ve sınır koyma pratiği. Sağ sütun büyüdükçe omuzlarındaki baskı biraz azaldı.</p>
+      <p>Bir pazar annesi masanın yanına oturup deftere baktı. Sayfaları sessizce çevirdi ve bir satıra dokundu: “Yük olmamak.” Sonra Attila'ya kalemi uzatıp “Bunun yanına bir cümle daha yaz” dedi. Attila yazdı: “Paylaşmak da güçtür.” O cümle defterin en değerli satırı oldu.</p>
+      <p>Bu farkındalıktan sonra Attila bazı işleri delege etmeye başladı. Başta kontrol kaybı gibi geldi, sonra fark etti ki delege etmek kaliteyi düşürmüyor; sürdürülebilirliği artırıyor. Tek kişilik sistem kırılgandı. Paylaşılmış sistem dayanıklıydı.</p>
+      <blockquote><p>Birikim sadece bankada değil; alışkanlıkta, ilişkide ve toparlanma hızında oluşur.</p></blockquote>
+      <p>Her ay sonu üç soru sordu: Ne doğru çalıştı? Nerede gereksiz yoruldum? Gelecek ay neyi sadeleştireceğim? Bu ritüel finansal planı duygusal planla buluşturdu. Attila'nın en büyük kazancı belki de buydu: sayıların yanında hissi de yönetmeye başlaması.</p>
+      <p>Defterin kapağına son cümleyi ekledi: “Yavaş birikim, ani çöküşten iyidir.”</p>
+    </article>
+
+    <!-- ─── BÖLÜM XIV ─── -->
+    <article class="chapter" id="bolum-14">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm XIV</span>
+        <h2 class="chapter-title">Yavaş Zafer</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Yılın sonuna yaklaşırken Attila'nın temposu dışarıdan daha sakin görünüyordu. Daha az paylaşım, daha az toplantı, daha az acele. Bazıları bunu geri çekilme sandı. Oysa içeride sistem çalışıyordu: düzenli gelir, dengeli iş hacmi, kontrollü büyüme, korunan dikkat.</p>
+      <p>Bir sabah birikim hesabında küçük bir eşiği geçtiğini gördü. Rakam büyük değildi; anlamı büyüktü. Çünkü bu artış panikle değil planla olmuştu. Kendine bir gün izin verdi, bilgisayarı açmadı, uzun yürüdü, sahafa uğradı, akşam erken uyudu. Bu küçük gün, yılların en lüks günü gibi geldi.</p>
+      <p>Ertesi hafta emlak danışmanıyla görüştü. Hemen alım yapmadı ama ilk kez masaya sadece hayal değil veri koydu. Bölge, bütçe, taksit, öncelik. Dönüşte içinde tek bir duygu yoktu; ne coşku ne umutsuzluk. İkisi arasında dengeli bir gerçeklik vardı. Bu denge ona yabancı ama güven vericiydi.</p>
+      <p>İlişkilerde de değişim oldu. Uzun süredir ertelenen dost buluşmaları geri geldi. Sohbetlerde sadece iş değil, kitaplar, müzik, çocukluk anıları da vardı. Attila fark etti: insan yalnızca üretim makinesi değildir; hatırlayan ve bağ kuran bir varlıktır.</p>
+      <blockquote><p>Zafer bazen alkışla değil, gece rahat uyumakla ölçülür.</p></blockquote>
+      <p>Tabii hâlâ zor günler vardı. Geciken ödemeler, bozulan planlar, belirsiz haftalar… Fark, Attila'nın artık her dalgayı fırtına sanmamasıydı. Geçici olanı kalıcı sandıkça yorulmuştu. Şimdi dalgayı dalga olarak görüyordu.</p>
+      <p>Günlüğe şu satırı yazdı: “Büyük sıçrama bekledim; benim yolum istikrarlı tırmanışmış.” Bu cümle geç gelen bir barış gibi hissettirdi.</p>
+    </article>
+
+    <!-- ─── BÖLÜM XV ─── -->
+    <article class="chapter" id="bolum-15">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm XV</span>
+        <h2 class="chapter-title">Nefesin Yeni Ritmi</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Kışın son haftasında Attila güne telefonsuz başladı. Perdeleri açtı, pencereye yaklaştı, derin nefes aldı. Göğsündeki düğüm tamamen çözülmemişti ama eskisi kadar sıkı değildi. Bu küçük fark bile ona büyük geldi. Çünkü yıllardır hissettiği daralmanın ilk kez ritmi değişiyordu.</p>
+      <p>Haftalık planında artık üç temel görev vardı; geri kalan alan esneklik içindi. Önceden her boşluğu işle doldurur, sürpriz çıktığında paniğe girerdi. Şimdi boşlukları bilinçli bırakıyor, hayatın doğal sapmalarına yer açıyordu. Esneklik onun yeni güvenlik mekanizması olmuştu.</p>
+      <p>Öğleden sonra eski bir müşteriden teşekkür mesajı geldi: “Sisteminiz sayesinde işlerimiz rahatladı.” Attila bu cümleyi birkaç kez okudu. Yıllardır verdiği emeğin başkalarının nefesini de kolaylaştırdığını görmek, kendi yolunu yeniden anlamlı kıldı.</p>
+      <p>Akşam ev ilanlarına göz gezdirdiğinde bir daire not aldı. Hemen heyecanlanmadı, hemen vazgeçmedi. Sadece olasılık olarak işaretledi. Bu nötr denge yeni bir beceriydi: umutla gerçekliği aynı masada tutabilmek.</p>
+      <blockquote><p>Nefes almak, sadece havayı içeri çekmek değil; geleceğe paniksiz bakabilmektir.</p></blockquote>
+      <p>Gece bilgisayarı kapatırken dokuz yaşındaki halini düşündü. O çocuğun “yük olmayacağım” cümlesine sessizce karşılık verdi: “Yük olmayacağım, ama yalnız da kalmayacağım.” Bu yeni sürüm, geçmişi reddetmiyor; onu iyileştiriyordu.</p>
+      <p>Attila'nın hikâyesi mucizeyle değil ritimle devam etti. Büyük bir final yerine sürdürülebilir bir başlangıçla. Ve belki de en gerçek zafer buydu.</p>
+    </article>
+
+    <!-- ─── BÖLÜM XVI ─── -->
+    <article class="chapter" id="bolum-16">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm XVI</span>
+        <h2 class="chapter-title">Kırk Gecelik Defter</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Attila mart ayının ilk gecesinde yeni bir defter açtı ve kapağına “Kırk Gece” yazdı. Kural basitti: Her gece yatmadan önce günün en dürüst üç cümlesini yazacaktı. Ne müşteri için süs, ne sosyal medya için filtre, ne kendini ikna etmek için parlak bir son. Sadece çıplak gerçek. Birinci gece şöyle başladı: “Bugün yoruldum. Yorgun olduğumu gizledim. Gizlemek beni daha çok yordu.” Bu üç cümle bile aylarca içinde tuttuğu ağırlığı hareket ettirmeye yetti.</p>
+      <p>İkinci gece “yük olmamak” cümlesinin onda açtığı koridorları yazdı. Çocukken bu cümle onu hızlı büyütmüştü; para hesabı yapmayı, erken sorumluluk almayı, bir işi baştan sona taşımayı öğretmişti. Ama aynı cümle ona yardım istemeyi neredeyse yasaklamıştı. Attila o gece uzun süre düşündü: İnsan kimseye yük olmamaya çalışırken, en ağır yükü kendi içine mi bindiriyordu? Cevap evet gibi görünüyordu.</p>
+      <p>Üçüncü gece deftere üniversite konusunu açtı. “Gitmedim” cümlesi yıllarca onda savunma refleksi üretmişti. Biri sorduğunda hemen çalıştığını, erken başladığını, proje geliştirdiğini anlatırdı. Bu anlatı doğruydu ama eksikti; çünkü içinde bir “acaba” da taşırdı. Kampüs görmenin, sınıf arkadaşlığı yaşamanın, geç kalmış bir gençlik günlüğünün eksikliği… Attila artık bu eksikliği inkâr etmiyordu. Eksikliği kabul etmek, onu büyütmek yerine küçültüyordu.</p>
+      <p>Dördüncü gece “karınca gibi çalıştım” cümlesini açtı. Karınca benzetmesini çok severdi; çünkü emek, sabır ve düzen çağrıştırırdı. Fakat deftere şunu da ekledi: “Karınca dinlenmezse yolunu şaşırır.” Bu satır onun için dönüm noktasıydı. Çünkü ilk kez emeği kutsarken dinlenmeyi de emeğin parçası olarak yazıyordu. Dinlenme, çalışmanın karşıtı değil; sürdürülebilirliğin şartıydı.</p>
+      <p>Beşinci gece sosyal medyanın psikoloji üzerindeki etkisini madde madde sıraladı. “Kıyas yorgunluğu”, “gecikmişlik hissi”, “başkalarının sonucuna maruz kalma”, “kendi sürecini değersiz görme”. Her bir maddenin yanına gün içinde yaşadığı küçük örnekleri koydu. Bir gönderi görüp moralinin düştüğü anı, bir başarı videosundan sonra kendi ilerlemesini yok saydığı dakikaları, gece yatağa girdiğinde ekranın cümlelerinin zihninde dönmeye devam etmesini. Yazdıkça kalıp netleşti: platform değil, kontrolsüz maruz kalma onu yoruyordu.</p>
+      <blockquote><p>Benim asıl savaşım başkalarıyla değil; kendi zihnimde açılan yanlış karşılaştırma tablolarıyla.</p></blockquote>
+      <p>Altıncı gece para meselesini açtı. Ailesinden para almama kararı, onda gururla birlikte sürekli bir aciliyet yaratmıştı. Her iş “hemen” olmalıydı, her ödeme “şimdi” gelmeliydi, her fırsat “kaçırılmamalıydı.” Oysa bu aciliyet uzun vadeli plan kurmasını zorlaştırıyordu. Deftere yeni bir cümle yazdı: “Acil yaşayan zihin, stratejik düşünemez.” Bu cümleyi ertesi sabah monitörün yanına yapıştırdı.</p>
+      <p>Yedinci gece beklenmedik bir şey oldu. Uzun süredir konuşmadığı bir arkadaşı mesaj attı ve sadece “Nasılsın?” dedi. Attila bu soruya otomatik “iyiyim” yazacakken durdu. Defterdeki pratiki hatırlayıp “zorlanıyorum ama toparlıyorum” yazdı. Karşıdan gelen cevap çok kısaydı: “Anlatmak istersen dinlerim.” Attila o akşam yürüyüşte yarım saat konuştu. Sorunlar çözülmedi, ama ağırlık tek kişilik olmaktan çıktı.</p>
+      <p>Sekizinci gece çalışma düzenindeki değişimleri yazdı. Sabah odak bloğu, öğlen kısa yürüyüş, akşam kapanış ritüeli. Günün sonunda “bitenler” kadar “yarına bırakılanlar” da normalleşmişti. Önceden yarına iş bırakmak suçluluk üretirdi. Şimdi yarına alan bırakmak stratejiye dönüşüyordu. Deftere şu satırı düştü: “Yarım bırakmak bazen başarısızlık değil, enerjiyi koruma yöntemidir.”</p>
+      <p>Dokuzuncu gece eski başarısızlık dosyalarını açtı. İptal olan projeler, boşa çıkan teklifler, tutmayan iş birlikleri… Her dosyanın yanına bir ders yazdı. “Sözlü vaat yetmez, yazılı kapsam şart.” “Tek müşteriye yaslanma.” “Ön ödeme yoksa başlangıç yok.” Bu arşiv bir utanç albümü olmaktan çıkıp operasyon rehberine dönüştü. Attila geçmişten ilk kez kendini döverek değil, öğrenerek çıktı.</p>
+      <p>Onuncu gece ev ve araba hedefini yeniden tarif etti. “Bir ev istiyorum, çünkü güvenlik.” “Bir araba istiyorum, çünkü zaman kontrolü.” Bu cümleler hedefin duygusal çekirdeğini netleştirdi. Böylece tasarruf planı daha anlamlı hale geldi. Her birikim kalemi artık sadece para değil, daralma anlarında dayanacağı bir iskelet parçasıydı. Hedef sayfalarının üstüne büyük harflerle “RAHATLAMA FONU” yazdı.</p>
+      <p>On birinci gece bedensel sinyalleri not etti. Daralma geldiğinde omuzları yükseliyor, çenesi sıkılıyor, nefes göğüste kalıyordu. Bunları fark edince küçük bir kriz protokolü yazdı: ekrandan uzaklaş, su iç, iki dakika balkon, beş derin nefes, bir gerçek cümle yaz. “Şu an güvendeyim. Zor ama geçici.” Bu protokol mucize yaratmıyordu ama nöbetin büyümesini engelliyordu.</p>
+      <p>On ikinci gece işteki başarı kriterini değiştirdi. Eskiden başarı = daha çok iş + daha çok gelir + daha çok görünürlük formülüydü. Yeni formül şöyle oldu: düzenli gelir + kaliteli üretim + korunan ruh hali. Bu formül daha az parlak ama daha gerçekti. Attila artık tek bir ayın şovuna değil, on iki ayın ritmine bakıyordu.</p>
+      <blockquote><p>Hızlı alkış yerine uzun dayanıklılık seçiyorum.</p></blockquote>
+      <p>On üçüncü gece deftere kısa ama ağır bir cümle yazdı: “Mutlu değilim demek ayıp değil.” Bu cümlenin yanında boş bir alan bıraktı ve altına ertesi gün şunu ekledi: “Mutlu değilim ama umutsuz da değilim.” İki cümle arasındaki fark, onun için bütün roman kadar önemliydi. Umutsuzluk yolun bittiğini söyler; mutsuzluk yolun yanlış ritimde olduğunu.</p>
+      <p>On dördüncü gece deftere çocukluğunu anlattı. Mahalledeki eski bilgisayar, fan sesi, ilk hata mesajı, ilk “eline sağlık.” Bu anılar ona şunu hatırlattı: Bu yolun temelinde korku kadar merak da vardı. Son yıllarda korku sesi merakı bastırmıştı. Attila şimdi o eski merakın sesini yeniden yükseltmeye çalışıyordu.</p>
+      <p>On beşinci gece “başkaları ne der” filtresini çıkarmayı denedi. Deftere ham cümleler yazdı: “Bazen kıskanıyorum.” “Bazen yorulunca herkesten uzaklaşıyorum.” “Bazen hiçbir şey yapmak istemiyorum.” Bu cümleleri saklamak yerine görmek, onların üzerindeki gücünü azalttı. Saklanan duygu büyür, görülen duygu şekil değiştirir.</p>
+      <p>On altıncı gece ilk kez kendine teşekkür etti. Çok kısa bir not: “Kalmayı başardın.” Attila için bu cümle büyük bir ödüldü. Çünkü yıllarca kendine yalnızca görev vermiş, takdir vermemişti. Görev sürdürülebilirlik için yeterli değildi; insanın iç sisteminin onay da duyması gerekiyordu.</p>
+      <p>On yedinci gece plan revizyonu yaptı. Gelir hedefini yükseltmedi, ama risk yönetimini güçlendirdi. Tek müşteri bağımlılığını azaltacak adımlar, içerik ve ürün gelirini dengeli büyütecek takvim, acil fonun alt limitleri. Bu teknik planların yanında bir satır vardı: “Ayda bir gün tamamen çevrimdışı.” Attila bu satırı kırmızıyla işaretledi.</p>
+      <p>On sekizinci gece defterdeki sayfaları geriye doğru okudu. İlk sayfalardaki panik tonu yerini daha dengeli cümlelere bırakmıştı. Sorunlar hâlâ vardı ama anlatı değişmişti: “Dağılıyorum” yerine “toparlıyorum”, “yetişemem” yerine “önceliklendiriyorum”, “yalnızım” yerine “destek alıyorum.” Dönüşüm bazen dışarıda değil dilde başlıyordu.</p>
+      <p>On dokuzuncu gece defteri kapatırken içinden bir cümle geçti: “Kırk gece sonunda bambaşka biri olmayacağım; ama daha dürüst biri olacağım.” Bu hedef ona yeterli geldi. Kusursuzluk değil, dürüstlük.</p>
+      <p>Yirminci geceye geldiğinde Attila artık sayfa doldurmak için değil, kendini duymak için yazıyordu. Yazının terapötik bir gösteri değil, kişisel mühendislik olduğunu keşfetmişti. Her cümle bir vida, her farkındalık bir bağlantı, her karar bir taşıyıcı kolon gibiydi. Kendi iç mimarisini yeniden kuruyordu.</p>
+      <p>Defterin sonuna şu notu düştü: “Kırk gece bittiğinde hayat değişmeyebilir. Ama hayatı taşıyan kişi değişirse, her şey yavaşça yerini bulur.”</p>
+    </article>
+
+    <!-- ─── BÖLÜM XVII ─── -->
+    <article class="chapter" id="bolum-17">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm XVII</span>
+        <h2 class="chapter-title">Uzun Yolun Haritası</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Attila nisanın ilk haftasında masa başına geçip gelecek üç yıl için bir harita çıkardı. Bu kez hedef listesini sadece “ne kadar kazanacağım” sorusuna göre değil, “nasıl yaşayacağım” sorusuna göre kurdu. Harita üç katmandan oluştu: ekonomik güvence, mesleki derinleşme, psikolojik dayanıklılık. Üç katmandan biri eksik kaldığında diğer ikisinin de zamanla çöktüğünü kendi geçmişinden öğrenmişti.</p>
+      <p>Ekonomik katmanda ilk hedef acil durum fonunu bir yıl yetecek seviyeye taşımaktı. Bu fon onun için sadece finansal tampon değil, panik freniydi. İkinci hedef ev peşinatı için ayrı hesap açmaktı; o hesaba yalnızca belirlenen günlerde, otomatik transferle para girecekti. Üçüncü hedef ulaşım maliyetini düşürecek adımı planlı tarihe bağlamaktı. Böylece “bir gün” belirsizliğini “şu aralıkta” netliğine çevirdi.</p>
+      <p>Mesleki katmanda Attila kendine iki ana alan seçti: biri sürdürülebilir ürün geliştirme, diğeri performans ve ölçekleme. Yıllardır her şeye koştuğu için derinleşme fırsatını kaçırdığını kabul etti. Artık daha az alana daha güçlü yatırım yapacaktı. Haftalık öğrenme blokları belirledi, aylık proje değerlendirme ritüeli koydu, yıl sonunda yayımlayacağı teknik notlar için başlık listesi oluşturdu.</p>
+      <p>Psikolojik katmanda ise en büyük hedef “daralma geldiğinde dağılmamak”tı. Bunun için kalıcı sistem kurdu: düzenli uyku çizelgesi, haftalık dijital detoks, ayda bir tam dinlenme günü, üç kişilik destek çevresi, günlük kısa yazı pratiği. Bu maddeler dışarıdan kişisel gelişim listesi gibi görünüyordu; Attila içinse yıllarca ihmal ettiği bakım altyapısıydı.</p>
+      <p>Haritayı hazırladıktan sonra bir kahveye çıktı ve kendini dışarıdan izlemeye çalıştı. Bir bankta otururken etraftan geçen insanlara baktı. Herkesin hızına göre yürüdüğünü fark etti. Kimse ondan daha hızlı ya da daha yavaş değildi; sadece başka bir ritimdeydi. O an karşılaştırma arzusunun biraz gevşediğini hissetti.</p>
+      <blockquote><p>Benim yolumun temposu bana ait; başkasının temposuna yetişmek zorunda değilim.</p></blockquote>
+      <p>Bir hafta sonra ani bir kriz çıktı. Büyük bir müşteriden beklenen ödeme gecikti, aynı gün iki küçük işte hata raporu geldi. Eski Attila bu kombinasyonda panik dalgasına kapılırdı. Yeni Attila önce protokolü açtı: nakit akış planı güncelle, kritik işleri sırala, iletişimi net tut, bedenini sabitle. Kriz geçmedi ama kontrol kaybolmadı. O gün Attila haritasının işe yaradığını canlı olarak test etti.</p>
+      <p>Haritanın en güçlü yanı esnek olmasıydı. Her ay sonunda veriye göre ayarlandı. Bazı hedefler ileri alındı, bazıları küçültüldü, bazıları genişletildi. Bu esneklik onun için yeniydi. Eskiden plan değişirse kendini başarısız sayardı. Şimdi planı güncellemenin olgunluk olduğunu kabul ediyordu.</p>
+      <p>Yaz başına doğru Attila kendi sitesine uzun bir yazı yayımladı. Başlığı “Sıfırdan zirveye değil, sıfırdan dengeye” idi. Yazıda hızlı başarı masallarının ona nasıl baskı kurduğunu, neden küçük ama tutarlı ilerlemeyi seçtiğini, genç yaşta çalışmanın getirdiği görünmez yükleri ve kendini korumak için geliştirdiği sistemleri anlattı. Yazı beklediğinden çok okundu.</p>
+      <p>Gelen mesajlar Attila'yı şaşırttı. Farklı şehirlerden, farklı yaşlardan insanlar aynı cümleyi yazıyordu: “Ben de böyle hissediyorum.” Attila bu cümleleri okurken boğazında bir sıcaklık hissetti. Yıllarca kişisel zayıflık sandığı şeyin aslında kuşak boyu ortak bir yük olduğunu görüyordu.</p>
+      <p>Bir akşam, yeni bir daireyi gezmeye gitti. Daire kusursuz değildi; mutfağı küçüktü, duvarları boyalıydı, balkon dar sayılırdı. Ama pencereden gelen ışık ona iyi geldi. Emlakçı konuşurken Attila göz ucuyla salonu izledi ve zihninde bir cümle belirdi: “Bir gün burada rahat nefes alabilirim.” Bu cümle ilk kez mümkünlük tonu taşıyordu.</p>
+      <p>Arabaya dair plan da netleşti. Attila acele alım yerine aşamalı hazırlık tercih etti: gider optimizasyonu, kullanım ihtiyaç analizi, bakım rezervi. Bu teknik yaklaşım ona hem özgüven hem sakinlik verdi. Kararları duygu anına değil, sisteme bağlamak, onu anlık dalgalanmaların etkisinden koruyordu.</p>
+      <p>Yol haritasının bir başka sonucu da iş seçiminde ortaya çıktı. Attila artık yalnızca ücretin büyüklüğüne bakmıyor; proje kapsamı, iletişim kalitesi, teslim gerçekçiliği ve karşılıklı saygı kriterlerini aynı anda değerlendiriyordu. Bu yüzden bazı “parlak” işleri reddetti, daha dengeli işleri seçti. Kısa vadede daha az heyecan, uzun vadede daha az yıkım.</p>
+      <blockquote><p>Kazanmak için her savaşa girmem gerekmiyor; doğru savaşları seçmem gerekiyor.</p></blockquote>
+      <p>Yılın ortasında Attila defterine bakıp ilk kez şu cümleyi kurdu: “Hâlâ her şey mükemmel değil, ama artık her şey kırılgan da değil.” Bu cümle onun için büyük bir dönemeçti. Çünkü geçmişte ya tamamen çökmüş hisseder ya da kendini zorla güçlü gösterirdi. Şimdi ara tonları da taşıyabiliyordu.</p>
+      <p>Bir gece balkon kapısını açtı, şehir sesini dinledi. Uzakta siren, aşağıda konuşmalar, arada geçen motor sesi… Kaos hâlâ oradaydı. Ama içinde eskisi kadar yankı yapmıyordu. Attila o an anladı: Dışarıdaki dünya sakinleşmeyebilir; içerideki düzen güçlenirse nefes yine bulunur.</p>
+      <p>Uzun yolun haritası ona bir varış noktası değil, bir hareket biçimi verdi. Zor gün geldiğinde dönüp bakacağı işaretler, iyi gün geldiğinde savrulmayı önleyecek sınırlar, belirsizlikte geri çağıracağı temel ilkeler. Haritanın en altına son kez şunu yazdı: “Ritim, hızdan değerlidir.”</p>
+      <p>Ve belki de bu romanın en gerçek cümlesi buydu: Attila kurtulmadı, ama kaybolmayı bıraktı.</p>
+    </article>
+
+    <!-- ─── BÖLÜM XVIII ─── -->
+    <article class="chapter" id="bolum-18">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm XVIII</span>
+        <h2 class="chapter-title">Kapanmayan Mektup</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Attila bir gece masa lambasını açtı ve kendine mektup yazmaya karar verdi. E-posta değil, not uygulaması değil, düz kâğıt. Çünkü klavyede yazınca cümleler çok hızlı geliyor, düşünce kendini savunmaya geçiyordu. Kâğıtta ise yavaşlamak zorundaydı. Mektubun ilk satırı şöyleydi: “Sevgili Attila, bu satırları sana bir başkası yazmıyor; yıllardır susan yanın yazıyor.” Kalemi bir an bırakıp pencereye baktı. Şehir uyumuyordu ama o gece şehirden çok kendi iç sesini duymak istiyordu.</p>
+      <p>Mektubun ilk bölümünde geçmişe döndü. Dokuz yaşındaki halini anlattı. O çocuk çalışmayı oyun gibi değil, zorunluluk gibi öğrenmişti. Hata mesajı gördüğünde ağlamayan, çözüm bulana kadar oturan bir çocuktu. Eline geçen ilk parayı harçlık gibi değil, sorumluluk gibi taşıdı. O çocuğun omuzlarına yetişkin kararları çok erken binmişti. Attila o gece bunu ilk kez suçlama tonu olmadan yazdı. “Seni o yıllarda kimse zorlamadı demeyeceğim,” diye ekledi, “hayatın gürültüsü zaten zorladı.”</p>
+      <p>Mektubun ikinci bölümünde üniversiteyi yazdı. Gidemediği koridorları, izlediği kampüs videolarını, “belki” kelimesini yıllarca içinde taşımasını. Sonra kendi kendine dürüst bir soru sordu: “Gidememek mi canını daha çok yakıyor, yoksa bunun için sürekli güçlü görünmek mi?” Cevap gecikmedi. Güçlü görünme çabası daha yorucuydu. Çünkü yaşanmamış bir ihtimal zamanla kabullenilebilirdi; ama inkâr edilen bir duygu her gün yeniden masaya gelirdi.</p>
+      <p>Üçüncü bölümde parayla ilişkisini anlattı. Paranın onda yarattığı duygu yalnızca “kazanmak” değildi; “daralmamak”tı. Biri para konuştuğunda Attila'nın zihninde doğrudan geleceğe dair alarm açılırdı. Bu alarm yıllarca onu çalıştırdı, ama aynı alarm dinlenmesini de engelledi. Mektuba şunu yazdı: “Parayı sevdiğim için değil, korktuğum için kovalamışım.” Bu cümle sertti ama doğruydu. Doğru cümlelerin şifası yavaş gelir, Attila bunu biliyordu.</p>
+      <p>Dördüncü bölümde sosyal medyadan bahsetti. Ekranda gördüğü hayatların onda bıraktığı izleri tek tek anlattı: gecikmişlik hissi, değersizlik kıvılcımları, “benden daha iyi herkes” algısı. Sonra bir cümle kurdu: “Vitrinle atölyeyi aynı terazide tartmak adil değil.” Bu cümleyi mektubun kenarına yıldız koydu. Çünkü bu cümle yalnızca bir tespit değil, günlük bir hatırlatmaydı. Başkalarının bitmiş dosyalarıyla kendi devam eden taslağını kıyaslamak, her gün kaybetmeye programlanmak demekti.</p>
+      <p>Beşinci bölümde “bir ev, bir araba” hayalini anlattı. Dışarıdan basit görünen bu hedefin içindeki duygusal yükü ilk kez bu kadar açık yazdı. Ev onun için duvar değil, güvenlikti. Araba onun için konfor değil, zamanını geri alma hakkıydı. Bu hedefin küçümsenmesi canını acıtıyordu; çünkü küçümsenen şey hedef değil, onun yıllardır taşıdığı kaygıydı. Mektubun bir yerinde “çok şey istemiyorum, sadece sürekli tetikte yaşamamak istiyorum” cümlesini yazdı ve altını iki kez çizdi.</p>
+      <blockquote><p>Benim talebim lüks değil; paniksiz bir gün.</p></blockquote>
+      <p>Altıncı bölümde başarı döngülerini anlattı. Tam yükselecek gibi olduğunda gelen kırılmaları, kapanan kapıları, beklenmedik dönüşleri, “yine başa mı döndüm” hissini. Sonra bir adım geri çekilip daha genişten baktı. Aslında her yıkımda tamamen başa dönmüyordu; sadece aynı duyguyla yeniden sınanıyordu. Bilgi birikiyordu, çevre büyüyordu, refleksler gelişiyordu. Ama duygusal hafıza her düşüşü sıfırmış gibi hissettiriyordu. Bu farkı yazmak ona iyi geldi.</p>
+      <p>Yedinci bölümde ilişkileri ele aldı. Aileye yük olmamak adına mesafe koyduğu anları, arkadaşlarına “iyiyim” deyip geçiştirdiği dönemleri, yardım istemekten kaçışını. Sonra annesinin bir cümlesini hatırladı: “Biz yük değiliz.” Bu cümleyi mektubun ortasına yazdı ve etrafına boşluk bıraktı. O boşlukta uzun süre kaldı. Çünkü cümlenin doğruluğu kadar, yıllarca bu cümleyi duymaya direnmiş olması da ağırdı.</p>
+      <p>Sekizinci bölümde bedeninden söz etti. Daralma nöbetlerinde omuzların yükselişi, çene kasılması, göğüste kısa nefes, gece uykudan aniden uyanma. Attila bunları yıllarca “normal yorgunluk” diye adlandırmıştı. Mektupta isimleriyle yazınca semptomlar biraz daha yönetilebilir hale geldi. Adı konan şeyin haritası çıkar, haritası çıkan şey için yol bulunur. Kendi kriz protokolünü bir kez daha yazdı ve güncelledi.</p>
+      <p>Dokuzuncu bölümde geleceğe mektup yazdı. “Bir gün evi aldığında ne hissedeceksin?” sorusunu sordu. Cevap şaşırtıcıydı: “Sadece rahat bir sessizlik.” Ne büyük kutlama, ne aşırı coşku. Sakin bir sessizlik. Araba için de aynı cevap geldi: “Acele etmeden gidebilme hakkı.” Attila bu yanıtları okuyunca hedeflerinin yüzeyde maddi, derinde psikolojik olduğunu bir kez daha anladı.</p>
+      <p>Onuncu bölümde kendine şart değil ilke yazdı. Şartlar dış koşullara bağlıydı, ilkeler iç dengesine. İlkeleri şöyle sıraladı: “Kapsamı net olmayan işe hayır.” “Uyku saatini teslim tarihi uğruna sürekli feda etme.” “Haftada bir gün ekranı azalt.” “Kıyas yerine kayıt tut.” “Destek istemeyi zayıflık sayma.” Bu ilkeler tamamlandığında yanında kutu işareti yoktu; çünkü bunlar birer görev değil, yaşam biçimiydi.</p>
+      <blockquote><p>Kendime koyduğum her ilke, içimdeki paniğe karşı çekilmiş bir emniyet şeridi.</p></blockquote>
+      <p>On birinci bölümde “mutlu değilim” cümlesini yeniden ele aldı. Bu cümleyi yazdığı ilk günü hatırladı; o gün utanmıştı. Şimdi aynı cümleyi yazınca utanmıyordu. Yanına bir ek yaptı: “Mutlu değilim ama yönsüz de değilim.” Attila için iyileşme bu farkta gizliydi. Bir duygunun adını koymak, onun kölesi olmak değil; onunla müzakere edebilmekti.</p>
+      <p>On ikinci bölümde yaptığı işleri tek tek yazdı. Mobil uygulamalar, web projeleri, gece düzeltmeleri, arızalı sistemleri ayağa kaldırdığı sabahlar, teslim yetiştirdiği haftalar. Bu listeyi yazarken kendine ilk kez dışarıdan baktı. “Ben az yapmadım,” dedi içinden, “sadece yaptıklarımı hemen değersizleştirmeyi alışkanlık edinmişim.” Mektubun bu kısmı bir övünme metni değildi; emek kaydının gecikmiş teslimiydi.</p>
+      <p>On üçüncü bölümde korkularını sıraya koydu: borç korkusu, gecikme korkusu, aileye yetememe korkusu, görünmez kalma korkusu. Sonra her korkunun karşısına bir eylem yazdı. Borç korkusu için acil fon; gecikme korkusu için gerçekçi takvim; aileye yetememe korkusu için şeffaf iletişim; görünmez kalma korkusu için düzenli ama sınırlı görünürlük. Korkular bir anda kaybolmadı, ama eylem eşleşmesiyle daha az bulanık hale geldi.</p>
+      <p>On dördüncü bölümde “başarı” tanımını yeniden yazdı. Eskiden başarı, dışarıdan kolay görülen metriklerden ibaretti: gelir, sayı, hız, alkış. Şimdi tanım değişti: sürdürülebilir düzen, korunan ruh hali, devam edebilen emek. Bu yeni tanım daha az parlıyor ama daha uzun yaşıyordu. Attila artık kısa süreli zirve yerine uzun süreli dengeyi seçiyordu.</p>
+      <p>On beşinci bölümde mektubun en zor cümlesi geldi: “Seni affediyorum.” Kime söylediğini bir an düşündü: erken büyüyen haline, çok sert davranan haline, her şeyin yükünü tek başına taşıyan haline. Affetmek geçmişi silmek değildi. Geçmişin bugünü yönetme gücünü azaltmaktı. Bu cümleyi yazdıktan sonra elini bir süre kâğıdın üzerinde tuttu.</p>
+      <p>On altıncı ve son bölümde mektubu kapatırken kendine söz verdi: “Hızlı olmak zorunda değilim. Gerçek olmak zorundayım.” Sonra kâğıdı katlayıp çalışma masasının çekmecesine koydu. Bu mektup bir kapanış değil, sürekli açık kalacak bir hatırlatmaydı. Attila biliyordu, zor günler yine gelecekti. Ama bu kez elinde sadece irade değil, yazılmış bir yol vardı.</p>
+      <p>Masa lambasını kapatırken odada ilk kez uzun zamandır hissetmediği bir sakinlik kaldı. Şehir hâlâ gürültülüydü, hesaplar hâlâ zordu, hedefler hâlâ uzaktı. Fakat Attila artık kendi sesini kaybetmiyordu. Ve bazen bir insanın yolunu bulması için gereken tek şey, kendi sesini yeniden tanımasıdır.</p>
+    </article>
+
+    <!-- ─── BÖLÜM XIX ─── -->
+    <article class="chapter" id="bolum-19">
+      <header class="chapter-header">
+        <span class="chapter-number">Bölüm XIX</span>
+        <h2 class="chapter-title">Sabit Adım Defteri</h2>
+        <div class="chapter-divider"></div>
+      </header>
+      <p>Mayıs ayının ilk pazarı Attila için küçük bir dönüm noktası oldu. Aylarca yazdığı notları, bütçe tablolarını, proje planlarını ve günlük kayıtları masaya yayıp tek bir dosyada birleştirdi. Dosyanın adını “Sabit Adım Defteri” koydu. Bu defterin amacı büyük hedefleri değil, günlük devamlılığı takip etmekti. Çünkü Attila artık şunu öğrenmişti: en kritik farkı dramatik kararlar değil, tekrar eden küçük adımlar yaratıyor.</p>
+      <p>Defterin ilk bölümüne sabah rutini yazıldı. Uyanış saati, on dakika sessizlik, kısa beden hareketi, günün üç önceliği. Attila bu rutini bir hafta, sonra iki hafta, sonra bir ay uyguladı. Bazen aksadı, bazen kaydı, bazen kısa kaldı. Ama her sapmayı “bozuldum” diye değil “ayar yapacağım” diye yorumladı. Bu yaklaşım onu geçmişteki siyah-beyaz düşünceden uzaklaştırdı.</p>
+      <p>İkinci bölümde iş akışı vardı. Her gün için yalnızca iki derin iş bloğu koydu. Aralara nefes alanı bıraktı. Toplantı günlerini kod günlerinden ayırdı. Acil olmayan talepleri ertesi güne taşıdı. Başta korktu; çünkü hızlı yanıt vermemenin fırsat kaybettireceğini düşündü. Sonra gördü ki yanıtı biraz gecikse de netliği arttıkça güven de artıyordu.</p>
+      <p>Üçüncü bölüm “psikolojik bakım” adını taşıyordu. Attila burada duygulara teknik bir gözle yaklaşmadı, insani bir dil kullandı. “Bugün daralma seviyesi?”, “Bugün kıyas dürtüsü?”, “Bugün yalnızlık hissi?” gibi kısa sorular koydu. Cevaplar zamanla bir desen oluşturdu. En çok yoran günler uykunun düşük, ekran süresinin yüksek ve belirsizliğin arttığı günlerdi. Bu desen ona erken uyarı sistemi sağladı.</p>
+      <blockquote><p>Ruh halimi ölçmek zayıflık değil; sistemin nereye zorlandığını görmek.</p></blockquote>
+      <p>Dördüncü bölümde ekonomik adımlar vardı. Haftalık gider gözden geçirme, aylık birikim transferi, üç aylık hedef kontrolü. Attila bu kısmı artık korkuyla değil sakin bir düzenle yürütüyordu. Ev ve araba hedefi hâlâ uzaktı ama artık sisin içinde değil haritanın üzerindeydi. Her ay bir miktar ilerlemek, “olmuyor” cümlesini “yavaş oluyor” cümlesine çevirdi.</p>
+      <p>Beşinci bölümde ilişkiler yer aldı. Attila haftada en az iki kişiye “iş dışı” mesaj atmayı kural yaptı. Sadece hal hatır, sadece temas. Bu basit kural onun yalnızlık hissini ciddi biçimde azalttı. İnsan ilişkileri kriz anında aniden inşa edilmiyordu; düzenli temasla yavaşça kuruluyordu.</p>
+      <p>Altıncı bölümde sosyal medya sınırları vardı. Günde iki pencere, toplam kırk dakika. Yorumları gün sonunda değil, sabah odak bloklarından sonra kontrol etme. Kıyas tetikleyen hesapları sessize alma. Attila bu kuralları uyguladıkça zihnindeki gürültünün desibeli düştü. Dünyanın hızı değişmemişti, ama kendi maruziyetini yönetebiliyordu.</p>
+      <p>Yedinci bölüm, Attila'nın en çok sevdiği kısım oldu: “Günün küçük zaferi.” Buraya dev başarılar yazılmıyordu. “Bugün hayır dedim.” “Bugün yürüyüşü atlamadım.” “Bugün panik anında protokolü uyguladım.” “Bugün erken kapattım.” Bu küçük kayıtlar, onun zihnindeki “ya hep ya hiç” terazisini kırdı.</p>
+      <p>Sekizinci bölümde “kriz günleri rehberi” vardı. Geciken ödeme, artan iş baskısı, bozulmuş plan gibi senaryolarda ne yapacağı adım adım yazılıydı. Attila rehberi bir kez gerçek bir kriz gününde açtı ve listedeki adımları sırayla uyguladı. Sonuç mükemmel değildi ama kontrollüydü. Bu kontrol hissi, daralmanın en güçlü panzehiriydi.</p>
+      <blockquote><p>Krizde karar vermek zor; krizden önce karar listesi hazırlamak akıllılık.</p></blockquote>
+      <p>Dokuzuncu bölümde gelecek yılın hedefleri vardı. Attila artık hedefleri “büyük sıçrama” mantığıyla değil, katmanlı ilerleme mantığıyla yazıyordu: önce düzen, sonra büyüme, sonra ölçek. Her katmanın altında net metrikler ve duygusal göstergeler birlikte yer alıyordu. Örneğin “gelir artışı” hedefinin yanında “uyku düzeni bozulmadan” şartı vardı.</p>
+      <p>Onuncu bölümde kendine bir mektup daha bıraktı: “Eğer yeniden daralırsan, bu defteri baştan oku.” Çünkü iyilik hali sabit değil, döngüseldi. Attila bunu kabullenmişti. Düşmek mümkün, yeniden düzen kurmak da mümkün. Defterin varlığı ona bu ikinci ihtimali sürekli hatırlatıyordu.</p>
+      <p>Sabit Adım Defteri birkaç haftada Attila'nın hayatını mucizeyle değiştirmedi. Ama günlerin tonunu değiştirdi. Kaosun içindeki kör nokta azaldı, kontrol hissi arttı, nefes daha düzenli hale geldi. En önemlisi, Attila kendi hikâyesine dışarıdan bakan bir seyirci olmaktan çıkıp içeriden yön veren bir aktöre dönüştü.</p>
+      <p>O gece defteri kapatırken tebessüm etti. Cümlesi kısa ve netti: “Büyük hayatlar, küçük adımların toplamı.”</p>
+    </article>
+
     <!-- ─── SONSÖZ ─── -->
     <article class="chapter epilogue-header" id="sonsoz">
       <header class="chapter-header">
@@ -727,6 +1002,38 @@
   <footer>
     <p>Daralıyorum &nbsp;·&nbsp; Attila'nın Hikâyesi &nbsp;·&nbsp; Tüm hakları saklıdır.</p>
   </footer>
+
+  <script>
+    (function () {
+      const progressFill = document.getElementById('progressFill');
+      const chapterCount = document.getElementById('chapterCount');
+      const wordCount = document.getElementById('wordCount');
+      const readingTime = document.getElementById('readingTime');
+      const content = document.querySelector('.book-content');
+
+      if (content && chapterCount) {
+        chapterCount.textContent = content.querySelectorAll('.chapter').length.toString();
+      }
+
+      if (content && wordCount && readingTime) {
+        const words = (content.innerText || '').trim().split(/\s+/).filter(Boolean).length;
+        wordCount.textContent = words.toLocaleString('tr-TR');
+        readingTime.textContent = Math.max(1, Math.round(words / 190)) + ' dk';
+      }
+
+      function updateProgress() {
+        if (!progressFill) return;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        const current = Math.max(0, window.scrollY);
+        const percentage = total > 0 ? Math.min(100, (current / total) * 100) : 0;
+        progressFill.style.width = percentage + '%';
+      }
+
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress);
+      updateProgress();
+    })();
+  </script>
 
 </body>
 </html>
